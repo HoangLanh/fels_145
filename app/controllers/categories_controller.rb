@@ -1,5 +1,6 @@
 class CategoriesController < ApplicationController
   before_action :logged_in_user, only: [:create, :edit, :update]
+  before_action :load_category, only: [:edit, :update]
 
   def index
     @categories = Category.paginate page: params[:page], per_page: Settings.per_page
@@ -24,7 +25,6 @@ class CategoriesController < ApplicationController
   end
 
   def update
-    @category = Category.find params[:id]
     if @category.update_attributes category_params
       flash[:success] = t "controllers.categories.updated"
       redirect_to root_url
@@ -37,4 +37,9 @@ class CategoriesController < ApplicationController
   def category_params
     params.require(:category).permit :name
   end
+
+  def load_category
+    @category = Category.find params[:id]
+  end
+
 end
